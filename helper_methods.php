@@ -1,7 +1,7 @@
 <?php
 
 
-require_once('E:\projects\scrapping\PHP-MySQLi-Database-Class-master\MysqliDb.php');
+require_once('PHP-MySQLi-Database-Class-master/MysqliDb.php');
 // spl_autoload_register("autoload");
 // require_once('simple_html_sax/simple_html_sax.php');
 // require_once('simple_html_sax.php');
@@ -141,12 +141,12 @@ function getLinksArray($content, $category)
         $link['title'] = trim($title);
         $link['img_src'] = $img_src;
         $link['u_id'] = array_key_exists('id', $params) ? $params['id'] : NULL;
-        $link['url'] = array_key_exists('u', $params) ? $params['u'] : "";// $params['u'];
+        $link['url'] = array_key_exists('u', $params) ? $params['u'] : ""; // $params['u'];
         $link['category_id'] = $category['id'];
 
         $links[] = $link;
     }
-        file_put_contents('temp.php', json_encode($links, JSON_PRETTY_PRINT));
+    file_put_contents('temp.php', json_encode($links, JSON_PRETTY_PRINT));
 
     $tiles = null;
     $doc = null;
@@ -279,7 +279,7 @@ function log_msg($p1, $p2 = '', $p3 = '')
             break;
         case 'categories_count': {
                 $str .= PHP_EOL;
-                $str .= "------------------------------".PHP_EOL;
+                $str .= "------------------------------" . PHP_EOL;
                 $str .= "categories count : " . $p2 . PHP_EOL;
             }
             break;
@@ -371,4 +371,65 @@ function stillRunning($code)
     //     return true;
     // file_put_contents("sync_file.txt", "");
     return false;
+}
+
+function getSyncData()
+{
+    global $dbCred;
+    $db =  new MysqliDb($dbCred['host'], $dbCred['user'], $dbCred['pass'], $dbCred['db']);
+    $response = array();
+    $last_category_id = getLastSyncCat();
+    if ($last_category_id > 0) {
+        $response['categories'] = $db->rawQuery('SELECT id FROM categories WHERE is_done = 1 AND id > ' . $last_category_id . ' ORDER BY id ASC LIMIT 2');
+    } else {
+        $response['categories'] = $db->rawQuery('SELECT id FROM categories WHERE is_done = 1 ORDER BY id ASC LIMIT 2');
+    }
+    if (count($response['categories']) < 1)
+        return 'empty';
+    $response['categories'] = array_column($response['categories'], "id");
+    $response['pages'] = $db->rawQuery('SELECT id FROM pages WHERE is_done = 1 AND category_id in ' . implodeCategories($response['categories']));
+    $response['pages'] = array_column($response['pages'], "id");
+    $response['links_new'] = $db->rawQuery('SELECT category_id, u_id, title, img_src, url, tags, duration FROM links_new WHERE category_id in ' . implodeCategories($response['categories']));
+
+    setLastSyncCat($response['categories'][count($response['categories']) - 1]);
+    $db->disconnect();
+    return $response;
+}
+
+function getSyncData2(){
+    
+    $filename='database_backup_'.date('m_d_h_i').'.sql';
+
+    $result=exec('mysqldump scrapper --password= --user=root --single-transaction >E:\\projects\\scrapping\\'.$filename,$output);
+    var_dump($output);
+}
+
+function getLastSyncCat()
+{
+    $last_id = file_get_contents("sync/sync_cat_id.txt");
+    $last_id = trim($last_id);
+    if (is_numeric($last_id) && $last_id != "")
+        return $last_id;
+    return -1;
+}
+
+function setLastSyncCat($cat_id)
+{
+    print_r($cat_id);
+    file_put_contents("sync/sync_cat_id.txt", $cat_id);
+}
+
+function setSyncLog($type, $msg)
+{
+    $msg .= "--------------------------------------------";
+    $msg = $msg . PHP_EOL . PHP_EOL;
+    if (!file_exists('sync/sync_log.txt'))
+        file_put_contents("sync/sync_log.txt", $msg);
+    else
+        file_put_contents("sync/sync_log.txt", $msg, FILE_APPEND);
+}
+
+function implodeCategories($cat_ids)
+{
+    return "(" . implode(",", $cat_ids) . ")";
 }

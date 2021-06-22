@@ -1,0 +1,47 @@
+
+------------------------------
+categories count : 296
+
+category start : 2 18_year_old
+pages(88) done : 25 50 75 100 
+category end : 2   total time: 126
+
+category start : 3 18-19_year_old
+pages(91) done : 25 50 75 100 
+category end : 3   total time: 114
+
+category start : 4 3d
+pages(19) done : 
+------------------------------
+categories count : 294
+
+category start : 4 3d
+pages(19) done : 25 
+category end : 4   total time: 28
+
+category start : 5 3some
+pages(192) done : 25 50 75 100 125 150 175 200 
+category end : 5   total time: 248
+
+category start : 6 abused
+pages(2) done : 25 
+category end : 6   total time: 12
+
+category start : 7 african
+pages(26) done : 25 50 
+category end : 7   total time: 39
+
+category start : 8 aggressive
+pages(1) done : 25 
+category end : 8   total time: 12
+
+category start : 9 allure
+pages(1) done : 25 
+category end : 9   total time: 11
+
+category start : 10 amateur
+pages(1935) done : 25 50 75 100 125 150 175 200 225 250 275 300 325 350 375 400 425 450 475 500 525 550 575 600 625 650 675 700 725 750 775 800 825 850 875 900 925 950 975 1000 1025 1050 1075 1100 1125 1150 1175 1200 1225 1250 1275 1300 1325 1350 1375 1400 1425 1450 1475 1500 1525 1550 1575 1600 1625 1650 1675 1700 1725 1750 1775 1800 1825 1850 1875 1900 1925 1950 
+category end : 10   total time: 2567
+
+category start : 11 amazing
+pages(25) done : 
